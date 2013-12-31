@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:context="http://www.springframework.org/schema/context" 
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans.xsd 
+           http://camel.apache.org/schema/spring 
+           http://camel.apache.org/schema/spring/camel-spring.xsd ">
+    
+    <camelContext xmlns="http://camel.apache.org/schema/spring">
+        <route>
+            <from uri="direct:start"/>
+            <!-- (1) 分割する前 -->
+            <log message="(1) ${body}." />
+            <split>
+                <simple>${body}</simple>
+                <!-- (2) 分割した各データ -->
+                <log message="(2) ${body}." />
+            </split>    
+            <!-- (3) 分割終了後 -->
+            <log message="(3) ${body}." />
+            <to uri="mock:result"/>
+        </route>
+    </camelContext>
+
+</beans>
