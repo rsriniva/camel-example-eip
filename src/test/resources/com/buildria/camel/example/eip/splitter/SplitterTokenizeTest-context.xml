@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:context="http://www.springframework.org/schema/context" 
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans.xsd 
+           http://camel.apache.org/schema/spring 
+           http://camel.apache.org/schema/spring/camel-spring.xsd ">
+    
+    <camelContext xmlns="http://camel.apache.org/schema/spring">
+        <route id="No.1">
+            <from uri="direct:start1"/>
+            <!-- (1) 分割する前 -->
+            <log message="(1) ${body}" />
+            <split>
+                <tokenize token="\n" />
+                <!-- (2) 分割した各データ -->
+                <log message="(2) ${body}" />
+            </split>    
+            <!-- (3) 分割終了後 -->
+            <log message="(3) ${body}" />
+            <to uri="mock:result1"/>
+        </route>
+
+        <route id="No.2">
+            <from uri="direct:start2"/>
+            <!-- (1) 分割する前 -->
+            <log message="(1) ${body}" />
+            <split>
+                <!-- 2個ずつまとめる -->
+                <tokenize token="\n" group="2" />
+                <!-- (2) 分割した各データ -->
+                <log message="(2) ${body}" />
+            </split>    
+            <!-- (3) 分割終了後 -->
+            <log message="(3) ${body}" />
+            <to uri="mock:result2"/>
+        </route>
+
+    </camelContext>
+
+</beans>
