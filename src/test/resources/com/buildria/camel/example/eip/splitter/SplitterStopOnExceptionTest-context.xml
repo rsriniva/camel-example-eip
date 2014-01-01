@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:context="http://www.springframework.org/schema/context" 
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans.xsd 
+           http://camel.apache.org/schema/spring 
+           http://camel.apache.org/schema/spring/camel-spring.xsd ">
+    
+    <camelContext xmlns="http://camel.apache.org/schema/spring">
+        <!-- 例外発生時の処理 -->
+        <onException>
+            <exception>java.lang.RuntimeException</exception>
+            <log message="(5) Error occured while splitting." />
+        </onException>
+        
+        <!-- stopOnException未設定 -->
+        <route id="No_stopOnException">
+            <from uri="direct:start_a"/>
+            <!-- (1) 分割する前 -->
+            <log message="(1) ${body}" />
+            <split>
+                <simple>${body}</simple>
+                <!-- (2) 分割した各データ -->
+                <log message="(2) ${header.CamelSplitIndex}: ${body}" />
+                <!-- (3) 例外をスロー -->
+                <log message="(3) 例外をスロー" />
+                <throwException ref="runtimeException" />
+            </split>    
+            <!-- (4) 分割終了後 -->
+            <log message="(4) ${body}" />
+            <to uri="mock:result_a"/>
+        </route>
+        
+        <!-- stopOnException設定 -->
+        <route id="stopOnException">
+            <from uri="direct:start_b"/>
+            <!-- (1) 分割する前 -->
+            <log message="(1) ${body}" />
+            <split stopOnException="true">
+                <simple>${body}</simple>
+                <!-- (2) 分割した各データ -->
+                <log message="(2) ${header.CamelSplitIndex}: ${body}" />
+                <!-- (3) 例外をスロー -->
+                <throwException ref="runtimeException" />
+                <log message="(3) 例外をスロー" />
+            </split>    
+            <!-- (4) 分割終了後 -->
+            <log message="(4) ${body}" />
+            <to uri="mock:result_b"/>
+        </route>
+        
+    </camelContext>
+
+    <!-- Split中に発生する例外 -->
+    <bean id="runtimeException" class="java.lang.RuntimeException" />
+    
+</beans>
