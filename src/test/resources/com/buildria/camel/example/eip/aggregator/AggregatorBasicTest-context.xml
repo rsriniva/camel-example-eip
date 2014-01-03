@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:context="http://www.springframework.org/schema/context" 
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans.xsd 
+           http://camel.apache.org/schema/spring 
+           http://camel.apache.org/schema/spring/camel-spring.xsd ">
+    
+    <camelContext xmlns="http://camel.apache.org/schema/spring">
+        <route>
+            <from uri="direct:start"/>
+            <!-- (1) 集約前 -->
+            <log message="(1) before: ${header.type} : ${body}" />
+            <!-- Aggregation Strategy と　完了条件(メッセージを3つ) -->
+            <aggregate strategyRef="MyAggregationStrategy" 
+                       completionSize="3">
+                <!-- 集約識別子 -->
+                <correlationExpression>
+                    <simple>${header.type}</simple>
+                </correlationExpression>
+                <!-- (2) 集約した各データ -->
+                <log message="(2) aggregated: ${body}" />
+            </aggregate>    
+            <!-- (3) 集約終了後 -->
+            <log message="(3) end: ${header.type} - ${body}" />
+            <to uri="mock:result"/>
+        </route>
+    </camelContext>
+    <!-- Aggregation Strategy -->
+    <bean id="MyAggregationStrategy" 
+          class="com.buildria.camel.example.eip.aggregator.MyAggregationStrategy" />
+
+</beans>
