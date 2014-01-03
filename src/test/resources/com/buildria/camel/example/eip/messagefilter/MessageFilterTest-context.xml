@@ -11,21 +11,12 @@
     <camelContext xmlns="http://camel.apache.org/schema/spring">
         <route>
             <from uri="direct:start"/>
-            <log message="(1) type = ${header.type}" />
-            <choice>
-                <when>
-                    <simple>${header.type} == 'A'</simple>
-                    <log message="(2) Adding ${body} ..." />
-                </when>
-                <when>
-                    <simple>${header.type} == 'D'</simple>
-                    <log message="(3) Deleting ${body} ..." />
-                </when>
-                <otherwise>
-                    <log message="(4) Unknown Type: ${header.type}" />
-                </otherwise>
-            </choice>
-            <log message="(5) end." />
+            <log message="(1) type = ${header.type} ${body}" />
+            <filter>
+                <simple>${header.type} == 'A'</simple>
+                <log message="(2) filtered ${body}" />
+            </filter>
+            <log message="(3) ${body} end." />
             <to uri="mock:result"/>
         </route>
     </camelContext>
