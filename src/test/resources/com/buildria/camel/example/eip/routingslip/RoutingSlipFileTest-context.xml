@@ -11,22 +11,21 @@
     <camelContext xmlns="http://camel.apache.org/schema/spring">
         <route>
             <from uri="direct:start"/>
-            <!-- ファイルの保存先を決定する -->
-            <log message="(1) before: pref:${header.pref}" />
-            <process ref="MyFileURIProcessor" />
-            <log message="(2) computing uri... ${header.routingSlipHeader}" />
+            <log message="(1) pref ... ${header.pref}" />
             <!-- デリミタは"#"、存在しないエンドポイントは無視 -->
             <routingSlip uriDelimiter="#" ignoreInvalidEndpoints="true" >
-                <simple>${header.routingSlipHeader}</simple>
+                <!-- ファイルの保存先を決定する -->
+                <!-- MyFileURICreator#createの戻り値から動的に処理を実行 -->
+                <method ref="MyFileURICreator" method="create" />
             </routingSlip>
             <!-- Exchange.SLIP_ENDPOINTに最後に実行したエンドポイントが設定される -->
-            <log message="(3) end. ${property.CamelSlipEndpoint}" />
+            <log message="(2) end. ${property.CamelSlipEndpoint}" />
             <to uri="mock:result" />
         </route>
     </camelContext>
     
-    <!-- FileプロデューサのURIを生成するプロセッサ -->
-    <bean id="MyFileURIProcessor" 
-          class="com.buildria.camel.example.eip.routingslip.MyFileURIProcessor" />
+    <!-- FileプロデューサのURIを生成するBean -->
+    <bean id="MyFileURICreator" 
+          class="com.buildria.camel.example.eip.routingslip.MyFileURICreator" />
 
 </beans>
