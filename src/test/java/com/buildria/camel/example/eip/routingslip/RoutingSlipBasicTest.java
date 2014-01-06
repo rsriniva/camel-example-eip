@@ -1,4 +1,4 @@
-package com.buildria.camel.example.eip.roundslip;
+package com.buildria.camel.example.eip.routingslip;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.EndpointInject;
