@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:context="http://www.springframework.org/schema/context" 
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans.xsd 
+           http://camel.apache.org/schema/spring 
+           http://camel.apache.org/schema/spring/camel-spring.xsd ">
+    
+    <camelContext xmlns="http://camel.apache.org/schema/spring">
+        <route>
+            <from uri="direct:start"/>
+            <!-- ファイルの保存先を決定する -->
+            <log message="(1) before: pref:${header.pref}" />
+            <process ref="MyFileURIProcessor" />
+            <log message="(2) computing uri... ${header.routingSlipHeader}" />
+            <!-- デリミタは"#"、存在しないエンドポイントは無視 -->
+            <routingSlip uriDelimiter="#" ignoreInvalidEndpoints="true" >
+                <simple>${header.routingSlipHeader}</simple>
+            </routingSlip>
+            <!-- Exchange.SLIP_ENDPOINTに最後に実行したエンドポイントが設定される -->
+            <log message="(3) end. ${property.CamelSlipEndpoint}" />
+            <to uri="mock:result" />
+        </route>
+    </camelContext>
+    
+    <!-- FileプロデューサのURIを生成するプロセッサ -->
+    <bean id="MyFileURIProcessor" 
+          class="com.buildria.camel.example.eip.routingslip.MyFileURIProcessor" />
+
+</beans>
