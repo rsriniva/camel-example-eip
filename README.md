@@ -1,15 +1,25 @@
-Camel Example EIP Project
-===========================
+# Camel Example EIP Project
 
-To build this project use
+http://wiki.buildria.com/camel/eip/start の説明で使用しているソースコードです。
+[Maven](http://maven.apache.org/)が必要です。
 
-    mvn install
 
-To run this project with Maven use
+## ディレクトリ構成
 
-    mvn camel:run
+Javaコード、Spring XMLは以下のデイレクトリにあります。
 
-For more help see the Apache Camel documentation
+* テストクラス 
+  * src/test/test/com/buildria/camel/example/eip/  
+* Spring XML
+  * src/test/resource/com/buildria/camel/example/eip/  
 
-    http://camel.apache.org/
+また、AggregatorBasicTest.java が使用するSpring XMLは、AggregatorBasicTest-context.xmlです。
+
+## 動かし方
+
+AggregatorBasicTest.java を起動するのは、
+
+  mvn test -Dcom.buildria.camel.exmaple.eip.aggregator.AggregatorBasicTest
+
+を実行してください。
 
