@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:context="http://www.springframework.org/schema/context" 
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans.xsd 
+           http://camel.apache.org/schema/spring 
+           http://camel.apache.org/schema/spring/camel-spring.xsd ">
+    
+    <camelContext xmlns="http://camel.apache.org/schema/spring">
+        <route>
+            <from uri="direct:start"/>
+            <log message="(1) before: ${header.routingSlipHeader}" />
+            <!-- デリミタは"#"、存在しないエンドポイントは無視 -->
+            <routingSlip uriDelimiter="#" ignoreInvalidEndpoints="true" >
+                <simple>${header.routingSlipHeader}</simple>
+            </routingSlip>
+            <log message="(3) end" />
+            <to uri="mock:result" />
+        </route>
+        
+        <route>
+            <from uri="direct:route_a" />
+            <log message="(2-a) route_a: ${body}" />
+        </route>
+        <route>
+            <from uri="direct:route_b" />
+            <log message="(2-b) route_b: ${body}" />
+        </route>
+        <route>
+            <from uri="direct:route_c" />
+            <log message="(2-c) route_c: ${body}" />
+        </route>                          
+    </camelContext>
+
+</beans>
