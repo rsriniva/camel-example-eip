@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:context="http://www.springframework.org/schema/context" 
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans.xsd 
+           http://camel.apache.org/schema/spring 
+           http://camel.apache.org/schema/spring/camel-spring.xsd ">
+    
+    <camelContext xmlns="http://camel.apache.org/schema/spring">
+        <route>
+            <from uri="direct:start"/>
+            <log message="(1) type = ${header.type}" />
+            <choice>
+                <when>
+                    <method ref="HeaderChecker" method="isTypeA" />
+                    <log message="(2) Adding ${body} ..." />
+                </when>
+                <otherwise>
+                    <log message="(3) Unknown Type: ${header.type}" />
+                </otherwise>
+            </choice>
+            <log message="(4) end." />
+            <to uri="mock:result"/>
+        </route>
+    </camelContext>
+    
+    <bean id="HeaderChecker" class="com.buildria.camel.example.eip.cbr.HeaderChecker" />
+
+</beans>
