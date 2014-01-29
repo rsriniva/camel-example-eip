@@ -38,7 +38,7 @@ public class SplitterTokenizeTest {
         StringBuilder csv = new StringBuilder();
         csv.append("A, 001, User001,Tokyo").append("\n");
         csv.append("U, 002, User002,Chiba").append("\n");
-        csv.append("D, 003, User003,Kanagawa").append("\n");
+        csv.append("D, 003, User003,Kanagawa");
 
         // 最後にデータを1つ受け取ること
         resultEndpoint1.expectedMessageCount(1);
