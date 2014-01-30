@@ -35,8 +35,30 @@
             <log message="(2) body = ${body}" />
             <to uri="mock:result"/>
         </route>
+        
+        <!-- Processで実行 -->
+        <route>
+            <from uri="direct:process"/>
+            <log message="(1) body = ${body}" />
+            <process ref="BodyUpdateProcessor"/>
+            <log message="(2) body = ${body}" />
+            <to uri="mock:result"/>
+        </route>
+
+        <!-- Processで実行 -->
+        <route>
+            <from uri="direct:process_to"/>
+            <log message="(1) body = ${body}" />
+            <to uri="BodyUpdateProcessor"/>
+            <log message="(2) body = ${body}" />
+            <to uri="mock:result"/>
+        </route>
 
     </camelContext>
 
+    <!-- JavaBeansとして定義 -->
     <bean id="BodyUpdater" class="com.buildria.camel.example.basis.bean.BodyUpdater" />
+    <!-- Processorとして定義 -->
+    <bean id="BodyUpdateProcessor" class="com.buildria.camel.example.basis.bean.BodyUpdateProcessor" />
+    
 </beans>

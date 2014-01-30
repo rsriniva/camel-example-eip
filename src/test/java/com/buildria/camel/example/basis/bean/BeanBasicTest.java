@@ -13,33 +13,45 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 public class BeanBasicTest {
-    
+
     @Autowired
     protected CamelContext camelContext;
-    
+
     private ProducerTemplate template;
 
     @Before
     public void setUp() throws Exception {
         template = camelContext.createProducerTemplate();
     }
-    
+
     @Test
     @DirtiesContext
-    public void testWithBeanTag() throws Exception {
+    public void testBeanTag() throws Exception {
         template.sendBody("direct:beanTag", "sample data");
     }
 
     @Test
     @DirtiesContext
-    public void testWithBeanComponent() throws Exception {
+    public void testBeanComponent() throws Exception {
         template.sendBody("direct:beanComponent", "sample data");
     }
 
     @Test
     @DirtiesContext
-    public void testWithBeanEndpoint() throws Exception {
+    public void testBeanEndpoint() throws Exception {
         template.sendBody("direct:beanEndpoint", "sample data");
+    }
+
+    @Test
+    @DirtiesContext
+    public void testProcess() throws Exception {
+        template.sendBody("direct:process", "sample data");
+    }
+
+    @Test
+    @DirtiesContext
+    public void testProcessTo() throws Exception {
+        template.sendBody("direct:process_to", "sample data");
     }
     
 }
