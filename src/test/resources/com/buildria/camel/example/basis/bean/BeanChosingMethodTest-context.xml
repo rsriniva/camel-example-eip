@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:context="http://www.springframework.org/schema/context" 
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans.xsd 
+           http://camel.apache.org/schema/spring 
+           http://camel.apache.org/schema/spring/camel-spring.xsd ">
+    
+    <camelContext xmlns="http://camel.apache.org/schema/spring">
+
+        <!-- convertBody -->
+        <route>
+            <from uri="direct:convertBody"/>
+            <log message="(1) 入力ヘッダ ${headers}" />
+            <log message="(2) 入力BODY   ${body}" />
+            <bean ref="ChosingMethod" method="convertBody" />
+            <to uri="mock:result"/>
+        </route>
+
+        <!-- convertBody(String) -->
+        <route>
+            <from uri="direct:convertBodyString"/>
+            <log message="(1) 入力ヘッダ ${headers}" />
+            <log message="(2) 入力BODY   ${body}" />
+            <bean ref="ChosingMethod" method="convertBody(String)" />
+            <to uri="mock:result"/>
+        </route>
+
+        <!-- convertBody(String, String) -->
+        <route>
+            <from uri="direct:convertBodyStringString"/>
+            <log message="(1) 入力ヘッダ ${headers}" />
+            <log message="(2) 入力BODY   ${body}" />
+            <bean ref="ChosingMethod" method="convertBody(String, String)" />
+            <to uri="mock:result"/>
+        </route>
+
+    </camelContext>
+
+    <!-- JavaBeansとして定義 -->
+    <bean id="ChosingMethod" class="com.buildria.camel.example.basis.bean.ChosingMethod" />
+    
+</beans>
