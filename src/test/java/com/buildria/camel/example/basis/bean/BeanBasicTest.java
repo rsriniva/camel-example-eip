@@ -1,5 +1,6 @@
 package com.buildria.camel.example.basis.bean;
 
+import com.buildria.camel.example.JunitBase;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.junit.Before;
@@ -12,7 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
-public class BeanBasicTest {
+public class BeanBasicTest extends JunitBase {
 
     @Autowired
     protected CamelContext camelContext;
@@ -20,7 +21,9 @@ public class BeanBasicTest {
     private ProducerTemplate template;
 
     @Before
+    @Override
     public void setUp() throws Exception {
+        super.setUp();
         template = camelContext.createProducerTemplate();
     }
 
@@ -53,5 +56,5 @@ public class BeanBasicTest {
     public void testProcessTo() throws Exception {
         template.sendBody("direct:process_to", "sample data");
     }
-    
+
 }

@@ -1,5 +1,6 @@
 package com.buildria.camel.example.eip.splitter;
 
+import com.buildria.camel.example.JunitBase;
 import java.io.File;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
@@ -13,7 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
-public class SplitterStreamingTest {
+public class SplitterStreamingTest extends JunitBase {
     
     @Autowired
     protected CamelContext camelContext;
@@ -21,7 +22,9 @@ public class SplitterStreamingTest {
     private ProducerTemplate template;
 
     @Before
+    @Override
     public void setUp() throws Exception {
+        super.setUp();
         template = camelContext.createProducerTemplate();
     }
     

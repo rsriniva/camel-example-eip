@@ -10,7 +10,7 @@
     
     <camelContext xmlns="http://camel.apache.org/schema/spring">
         <route>
-            <from uri="direct:start"/>
+            <from uri="direct:roundslip"/>
             <log message="(1) before: ${header.routingSlipHeader}" />
             <!-- デリミタは"#"、存在しないエンドポイントは無視 -->
             <routingSlip uriDelimiter="#" ignoreInvalidEndpoints="true" >

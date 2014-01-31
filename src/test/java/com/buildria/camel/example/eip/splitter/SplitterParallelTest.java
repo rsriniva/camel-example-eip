@@ -1,5 +1,6 @@
 package com.buildria.camel.example.eip.splitter;
 
+import com.buildria.camel.example.JunitBase;
 import com.buildria.camel.example.eip.splitter.model.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
-public class SplitterParallelTest {
+public class SplitterParallelTest extends JunitBase {
     
     @Autowired
     protected CamelContext camelContext;
@@ -23,7 +24,9 @@ public class SplitterParallelTest {
     private ProducerTemplate template;
 
     @Before
+    @Override
     public void setUp() throws Exception {
+        super.setUp();
         template = camelContext.createProducerTemplate();
     }
     

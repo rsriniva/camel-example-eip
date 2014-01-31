@@ -1,12 +1,11 @@
 package com.buildria.camel.example.eip.aggregator;
 
+import com.buildria.camel.example.JunitBase;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.camel.CamelContext;
-import org.apache.camel.EndpointInject;
-import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
-import org.apache.camel.component.mock.MockEndpoint;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +15,20 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
-public class AggregatorDynamicTest {
+public class AggregatorDynamicTest extends JunitBase {
 
     @Autowired
     protected CamelContext camelContext;
 
-    @Produce(uri = "direct:start")
     private ProducerTemplate template;
 
-    @EndpointInject(uri = "mock:result")
-    private MockEndpoint resultEndpoint;
-
+    @Before
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        template = camelContext.createProducerTemplate();
+    }  
+    
     @Test
     @DirtiesContext
     public void testAggregate() throws Exception {
@@ -48,12 +50,12 @@ public class AggregatorDynamicTest {
             }
         };
 
-        template.sendBodyAndHeaders("No.1", headerA);
-        template.sendBodyAndHeaders("No.2", headerB);
-        template.sendBodyAndHeaders("No.3", headerA);
-        template.sendBodyAndHeaders("No.4", headerB);
-        template.sendBodyAndHeaders("No.5", headerA);
-        template.sendBodyAndHeaders("No.6", headerB);
+        template.sendBodyAndHeaders("direct:start", "No.1", headerA);
+        template.sendBodyAndHeaders("direct:start", "No.2", headerB);
+        template.sendBodyAndHeaders("direct:start", "No.3", headerA);
+        template.sendBodyAndHeaders("direct:start", "No.4", headerB);
+        template.sendBodyAndHeaders("direct:start", "No.5", headerA);
+        template.sendBodyAndHeaders("direct:start", "No.6", headerB);
 
 //[main] (1) before: A : No.1
 //[main] (3) end: A - No.1
