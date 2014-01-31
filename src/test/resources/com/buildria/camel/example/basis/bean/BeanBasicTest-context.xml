@@ -12,45 +12,45 @@
         <!-- <bean>で実行 -->
         <route>
             <from uri="direct:beanTag"/>
-            <log message="(1) body = ${body}" />
+            <log message="(1) 実行前 body = ${body}" />
             <bean ref="BodyUpdater" method="toUpperCase" />
-            <log message="(2) body = ${body}" />
+            <log message="(2) 実行後 body = ${body}" />
             <to uri="mock:result"/>
         </route>
 
         <!-- <to>で実行 -->
         <route>
             <from uri="direct:beanComponent"/>
-            <log message="(1) body = ${body}" />
+            <log message="(1) 実行前 body = ${body}" />
             <to uri="bean:BodyUpdater?method=toUpperCase" />
-            <log message="(2) body = ${body}" />
+            <log message="(2) 実行後 body = ${body}" />
             <to uri="mock:result"/>
         </route>
 
         <!-- Endpointで実行 -->
         <route>
             <from uri="direct:beanEndpoint"/>
-            <log message="(1) body = ${body}" />
+            <log message="(1) 実行前 body = ${body}" />
             <to uri="BodyUpdater" />
-            <log message="(2) body = ${body}" />
+            <log message="(2) 実行後 body = ${body}" />
             <to uri="mock:result"/>
         </route>
         
         <!-- Processで実行 -->
         <route>
             <from uri="direct:process"/>
-            <log message="(1) body = ${body}" />
+            <log message="(1) 実行前 body = ${body}" />
             <process ref="BodyUpdateProcessor"/>
-            <log message="(2) body = ${body}" />
+            <log message="(2) 実行後 body = ${body}" />
             <to uri="mock:result"/>
         </route>
 
         <!-- Processで実行 -->
         <route>
             <from uri="direct:process_to"/>
-            <log message="(1) body = ${body}" />
+            <log message="(1) 実行前 body = ${body}" />
             <to uri="BodyUpdateProcessor"/>
-            <log message="(2) body = ${body}" />
+            <log message="(2) 実行後 body = ${body}" />
             <to uri="mock:result"/>
         </route>
 
