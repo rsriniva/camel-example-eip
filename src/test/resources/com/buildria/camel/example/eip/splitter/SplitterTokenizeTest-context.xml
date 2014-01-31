@@ -9,8 +9,9 @@
            http://camel.apache.org/schema/spring/camel-spring.xsd ">
     
     <camelContext xmlns="http://camel.apache.org/schema/spring">
-        <route id="No.1">
-            <from uri="direct:start1"/>
+        <!-- group属性は使用しない -->
+        <route>
+            <from uri="direct:tokenize"/>
             <!-- (1) 分割する前 -->
             <log message="(1) ${body}" />
             <split>
@@ -23,8 +24,9 @@
             <to uri="mock:result1"/>
         </route>
 
-        <route id="No.2">
-            <from uri="direct:start2"/>
+        <!-- group属性 -->
+        <route>
+            <from uri="direct:tokenize_group"/>
             <!-- (1) 分割する前 -->
             <log message="(1) ${body}" />
             <split>

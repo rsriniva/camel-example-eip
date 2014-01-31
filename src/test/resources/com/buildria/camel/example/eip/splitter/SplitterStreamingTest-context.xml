@@ -10,7 +10,7 @@
     
     <camelContext xmlns="http://camel.apache.org/schema/spring">
         <route>
-            <from uri="direct:start"/>
+            <from uri="direct:streaming"/>
             <split streaming="true">
                 <tokenize token="\n"/>
                 <!-- (1) 分割した各データ -->

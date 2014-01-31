@@ -4,9 +4,9 @@ import com.buildria.camel.example.eip.splitter.model.User;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.camel.CamelContext;
-import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import static org.junit.Assert.fail;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +21,12 @@ public class SplitterStopOnExceptionTest {
     @Autowired
     protected CamelContext camelContext;
     
-    @Produce(uri = "direct:start_a")
-    private ProducerTemplate templateA;
+    private ProducerTemplate template;
 
-    @Produce(uri = "direct:start_b")
-    private ProducerTemplate templateB;
+    @Before
+    public void setUp() throws Exception {
+        template = camelContext.createProducerTemplate();
+    }
     
     @Test(expected = RuntimeException.class)
     @DirtiesContext
@@ -37,7 +38,7 @@ public class SplitterStopOnExceptionTest {
         users.add(new User("003", "User03", "Kanagawa"));
 
         // 入力データ送信
-        templateA.sendBody(users);
+        template.sendBody("direct:start_a", users);
         
         fail();
     }
@@ -52,7 +53,7 @@ public class SplitterStopOnExceptionTest {
         users.add(new User("003", "User03", "Kanagawa"));
 
         // 入力データ送信
-        templateB.sendBody(users);
+        template.sendBody("direct:start_a", users);
         
         fail();
     }

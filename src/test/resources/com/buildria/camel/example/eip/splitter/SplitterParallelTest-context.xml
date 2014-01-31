@@ -15,7 +15,7 @@
                                poolSize="3" maxPoolSize="3" maxQueueSize="-1"/>
         
         <route>
-            <from uri="direct:start_a"/>
+            <from uri="direct:parallelProcessing"/>
             <!-- (1) 分割する前 -->
             <log message="(1) ${body}." />
             <!-- パラレル -->
@@ -30,7 +30,7 @@
         </route>
         
         <route>
-            <from uri="direct:start_b"/>
+            <from uri="direct:executorServiceRef"/>
             <!-- (1) 分割する前 -->
             <log message="(1) ${body}." />
             <!-- パラレル -->

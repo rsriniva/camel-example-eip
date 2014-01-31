@@ -4,10 +4,8 @@ import com.buildria.camel.example.eip.splitter.model.User;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.camel.CamelContext;
-import org.apache.camel.EndpointInject;
-import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
-import org.apache.camel.component.mock.MockEndpoint;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +20,12 @@ public class SplitterParallelTest {
     @Autowired
     protected CamelContext camelContext;
     
-    @Produce(uri = "direct:start_a")
-    private ProducerTemplate templateA;
+    private ProducerTemplate template;
 
-    @EndpointInject(uri = "mock:result_a")
-    private MockEndpoint resultEndpointA;
-
-    @Produce(uri = "direct:start_b")
-    private ProducerTemplate templateB;
-
-    @EndpointInject(uri = "mock:result_b")
-    private MockEndpoint resultEndpointB;
+    @Before
+    public void setUp() throws Exception {
+        template = camelContext.createProducerTemplate();
+    }
     
     @Test
     @DirtiesContext
@@ -43,14 +36,8 @@ public class SplitterParallelTest {
             users.add(new User(String.valueOf(i), "User" + i, "Tokyo"));
         }
         
-        // 最後にデータを1つ受け取ること
-        resultEndpointA.expectedMessageCount(1);
-        
         // 入力データ送信
-        templateA.sendBody(users);
-
-        // 検証
-        resultEndpointA.assertIsSatisfied();
+        template.sendBody("direct:parallelProcessing", users);
     }
     
     @Test
@@ -62,14 +49,8 @@ public class SplitterParallelTest {
             users.add(new User(String.valueOf(i), "User" + i, "Tokyo"));
         }
         
-        // 最後にデータを1つ受け取ること
-        resultEndpointB.expectedMessageCount(1);
-        
         // 入力データ送信
-        templateB.sendBody(users);
-
-        // 検証
-        resultEndpointB.assertIsSatisfied();
+        template.sendBody("direct:executorServiceRef", users);
     }
     
 }
