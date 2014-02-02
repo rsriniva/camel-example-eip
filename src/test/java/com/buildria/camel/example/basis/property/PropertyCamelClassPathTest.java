@@ -30,7 +30,7 @@ public class PropertyCamelClassPathTest extends JunitBase {
     @Test
     @DirtiesContext
     public void testClassPath() throws Exception {
-        template.sendBody("direct:camelpath", "sample data");
+        template.sendBody("direct:classpath", "sample data");
     }
 
 
