@@ -8,6 +8,6 @@ public class MyFileURICreator {
         // ヘッダ"pref"の値を取得
         String pref = exchange.getIn().getHeader("pref", String.class);
         // FileプロデューサのURIを生成
-       return "file:work/" + pref;
+       return "file:target/work/" + pref;
     }
 }
