@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:context="http://www.springframework.org/schema/context" 
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans.xsd 
+           http://camel.apache.org/schema/spring 
+           http://camel.apache.org/schema/spring/camel-spring.xsd ">
+    
+    <!-- traceの出力形式を設定 -->
+    <bean id="traceFormatter" class="org.apache.camel.processor.interceptor.DefaultTraceFormatter">
+        <!-- BODYの形式、内容を非表示 -->
+        <property name="showBody" value="false"/>
+        <property name="showBodyType" value="false"/>
+        <!-- パンくずリストを非表示 -->
+        <property name="showBreadCrumb" value="false"/>
+        <!-- 出力文字数を制限 -->
+        <property name="maxChars" value="100"/>
+    </bean>
+    
+    <camelContext trace="true" xmlns="http://camel.apache.org/schema/spring">
+        <route id="trace_route">
+            <from uri="direct:trace"/>
+            <log message="(1) 実行前 headers = ${headers}" />
+            <choice>
+                <when>
+                    <simple>${header.type} == 'A'</simple>
+                    <log message="(2-a) Type A" />
+                </when>
+                <when>
+                    <simple>${header.type} == 'B'</simple>
+                    <log message="(2-b) Type B" />
+                </when>
+                <otherwise>
+                    <log message="(2-c) Unknown Type" />
+                </otherwise>
+            </choice>
+            <to uri="mock:result"/>
+        </route>
+    </camelContext>
+    
+</beans>
