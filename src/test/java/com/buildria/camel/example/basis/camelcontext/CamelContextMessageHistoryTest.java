@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
-public class CamelContextTraceTest extends JunitBase {
+public class CamelContextMessageHistoryTest extends JunitBase {
 
     @Autowired
     protected CamelContext camelContext;
@@ -27,16 +27,11 @@ public class CamelContextTraceTest extends JunitBase {
         template = camelContext.createProducerTemplate();
     }
 
-    @Test
-    @DirtiesContext
-    public void testTrace() throws Exception {
-        template.sendBodyAndHeader("direct:trace", "sample data", "type", "A");
-    }
-
     @Test(expected = RuntimeException.class)
     @DirtiesContext
-    public void testTraceException() throws Exception {
-        template.sendBodyAndHeader("direct:trace_exception", "sample data", "type", "A");
+    public void testMessageHistoryFalse() throws Exception {
+        template.sendBody("direct:messageHistoryFalse", "sample data");
     }
+
 
 }

@@ -27,6 +27,15 @@
             </choice>
             <to uri="mock:result"/>
         </route>
+        
+        <route id="trace_route_exception">
+            <from uri="direct:trace_exception"/>
+            <throwException ref="RuntimeException" />
+            <to uri="mock:result" />            
+        </route>        
     </camelContext>
+    
+    <!-- 例外 -->    
+    <bean id="RuntimeException" class="java.lang.RuntimeException" />
     
 </beans>
