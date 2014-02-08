@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:context="http://www.springframework.org/schema/context" 
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans.xsd 
+           http://camel.apache.org/schema/spring 
+           http://camel.apache.org/schema/spring/camel-spring.xsd ">
+    
+    <camelContext xmlns="http://camel.apache.org/schema/spring">
+
+        <!-- デフォルトスレッド・プロファイル -->
+        <threadPoolProfile id="MyDefaultThreadPool" defaultProfile="true"
+                           poolSize="5" maxPoolSize="5" maxQueueSize="10000"
+                           keepAliveTime="60" rejectedPolicy="CallerRuns" />
+
+        <!-- カスタムレッド・プロファイル -->
+        <threadPoolProfile id="MyCustomThreadPool" 
+                           poolSize="10" maxPoolSize="10" />
+        
+        <!-- スレッドプール -->
+        <threadPool id="MyThreadPool" poolSize="20" maxPoolSize="20" 
+                    maxQueueSize="1000" rejectedPolicy="CallerRuns" keepAliveTime="30" 
+                    threadName="MyThread" />
+                
+        <route>
+            <from uri="direct:MyDefaultThreadPoolProfile"/>
+            <!-- (1) 分割する前 -->
+            <log message="(1) ${body}." />
+            <!-- パラレル デフォルトのスレッドプール・プロファイルを使用 -->
+            <split parallelProcessing="true">
+                <simple>${body}</simple>
+                <!-- (2) 分割した各データ -->
+                <log message="(2) ${body}." />
+            </split>    
+            <!-- (3) 分割終了後 -->
+            <log message="(3) ${body}." />
+            <to uri="mock:result_a"/>
+        </route>
+
+        <route>
+            <from uri="direct:MyCustomThreadPoolProfile"/>
+            <!-- (1) 分割する前 -->
+            <log message="(1) ${body}." />
+            <!-- カスタム スレッドプール・プロファイルを使用 -->
+            <split executorServiceRef="MyCustomThreadPool">
+                <simple>${body}</simple>
+                <!-- (2) 分割した各データ -->
+                <log message="(2) ${body}." />
+            </split>    
+            <!-- (3) 分割終了後 -->
+            <log message="(3) ${body}." />
+            <to uri="mock:result_a"/>
+        </route>
+
+        <route>
+            <from uri="direct:MyThreadPool"/>
+            <!-- (1) 分割する前 -->
+            <log message="(1) ${body}." />
+            <!-- スレッドプールを使用 -->
+            <split executorServiceRef="MyThreadPool">
+                <simple>${body}</simple>
+                <!-- (2) 分割した各データ -->
+                <log message="(2) ${body}." />
+            </split>    
+            <!-- (3) 分割終了後 -->
+            <log message="(3) ${body}." />
+            <to uri="mock:result_a"/>
+        </route>
+
+    </camelContext>
+
+</beans>
