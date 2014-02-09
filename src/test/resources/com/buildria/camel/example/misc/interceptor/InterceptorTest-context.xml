@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:context="http://www.springframework.org/schema/context" 
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans.xsd 
+           http://camel.apache.org/schema/spring 
+           http://camel.apache.org/schema/spring/camel-spring.xsd ">
+    
+    <camelContext xmlns="http://camel.apache.org/schema/spring">
+        <intercept>
+            <log message="(a) intercept" />
+        </intercept>
+        <interceptFrom>
+            <log message="(b) interceptFrom" />
+        </interceptFrom>
+        <interceptSendToEndpoint uri="bean:Worker">
+            <log message="(c) interceptSendToEndpoint" />
+        </interceptSendToEndpoint>
+        
+        <route>
+            <from uri="direct:interceptor"/>
+            <to uri="mock:report" />
+            <to uri="bean:Worker" />
+            <to uri="mock:result"/>
+        </route>
+    </camelContext>
+
+    <bean id="Worker" class="com.buildria.camel.example.misc.interceptor.Worker" />
+    
+</beans>
