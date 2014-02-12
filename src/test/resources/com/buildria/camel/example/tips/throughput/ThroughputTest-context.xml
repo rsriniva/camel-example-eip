@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:context="http://www.springframework.org/schema/context" 
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans.xsd 
+           http://camel.apache.org/schema/spring 
+           http://camel.apache.org/schema/spring/camel-spring.xsd ">
+    
+    <camelContext xmlns="http://camel.apache.org/schema/spring">
+        <route>
+            <from uri="seda:throughput"/>
+            <split parallelProcessing="true">
+                <simple>${body}</simple>
+                <delay>
+                    <constant>20</constant>
+                </delay>
+                <to uri="log:com.buildria.camel.example.basis.thread?level=INFO&amp;groupInterval=1000&amp;groupDelay=200&amp;groupActiveOnly=false" />
+            </split>
+            <to uri="mock:result"/>
+        </route>
+    </camelContext>
+
+</beans>
