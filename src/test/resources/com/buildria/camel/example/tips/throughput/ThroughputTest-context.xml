@@ -10,21 +10,28 @@
     
     <camelContext xmlns="http://camel.apache.org/schema/spring">
         
+        <!-- スレッドプロファイル -->
+        <!-- poolSize, maxPoolSizeでスレッド数を変更することで、スループットが
+             どうなるか確認する -->
         <threadPoolProfile id="MyDefaultThreadProfile" defaultProfile="true"
-            poolSize="10" maxPoolSize="10" maxQueueSize="1000" 
+            poolSize="10" maxPoolSize="10" maxQueueSize="5000" 
             keepAliveTime="60" rejectedPolicy="CallerRuns" />
         
         <route>
             <from uri="seda:throughput"/>
+            <!-- 入力のList<User>を分割し、スレッドを使用して処理する -->
             <split parallelProcessing="true">
                 <simple>${body}</simple>
+                <!-- 業務処理を想定して20ms waitする -->
                 <delay>
                     <constant>20</constant>
                 </delay>
+                <!-- 1000ms毎に処理したExchangeの数を出力する -->
                 <to uri="log:com.buildria.camel.example.basis.thread?level=INFO&amp;groupInterval=1000&amp;groupDelay=200&amp;groupActiveOnly=false" />
             </split>
             <to uri="mock:result"/>
         </route>
+        
     </camelContext>
 
 </beans>

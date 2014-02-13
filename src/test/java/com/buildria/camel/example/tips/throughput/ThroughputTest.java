@@ -19,6 +19,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration
 public class ThroughputTest extends JunitBase {
 
+    /**
+     * 送信するデータサイズ。
+     */
+    private static final int DATA_SIZE = 100;
+    
     @Autowired
     protected CamelContext camelContext;
 
@@ -35,18 +40,21 @@ public class ThroughputTest extends JunitBase {
     @DirtiesContext
     public void testThroughput() throws Exception {
         
-        NotifyBuilder notify = new NotifyBuilder(camelContext).wereSentTo("mock:result").whenDone(100).create();
+        // <to uri="mock:result" />に送信したメッセージがすべて完了すること
+        NotifyBuilder notify = new NotifyBuilder(camelContext).wereSentTo("mock:result")
+                .whenDone(DATA_SIZE).create();
         
-        for (int loop = 0; loop < 100; loop++) {
+        // 50個のUserをDATA_SIZE回非同期で送信する
+        for (int loop = 0; loop < DATA_SIZE; loop++) {
             List<User> users = new ArrayList<User>();
             for (int i = 0; i < 50; i++) {
                 String no = String.format("%03d", i);
                 users.add(new User(no, "User" + no, "Tokyo" + no));
             }
-            // 入力データ送信
             template.sendBody("seda:throughput", users);
         }
         
+        // すべてが完了するまで待ち合わせる
         boolean done = notify.matches(180, TimeUnit.SECONDS);
     }
 
