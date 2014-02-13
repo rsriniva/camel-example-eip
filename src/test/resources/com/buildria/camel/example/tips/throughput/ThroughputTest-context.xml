@@ -9,6 +9,11 @@
            http://camel.apache.org/schema/spring/camel-spring.xsd ">
     
     <camelContext xmlns="http://camel.apache.org/schema/spring">
+        
+        <threadPoolProfile id="MyDefaultThreadProfile" defaultProfile="true"
+            poolSize="10" maxPoolSize="10" maxQueueSize="1000" 
+            keepAliveTime="60" rejectedPolicy="CallerRuns" />
+        
         <route>
             <from uri="seda:throughput"/>
             <split parallelProcessing="true">

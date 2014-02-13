@@ -35,7 +35,7 @@ public class ThroughputTest extends JunitBase {
     @DirtiesContext
     public void testThroughput() throws Exception {
         
-        NotifyBuilder notify = new NotifyBuilder(camelContext).wereSentTo("mock:result").whenDone(10).create();
+        NotifyBuilder notify = new NotifyBuilder(camelContext).wereSentTo("mock:result").whenDone(100).create();
         
         for (int loop = 0; loop < 100; loop++) {
             List<User> users = new ArrayList<User>();
